@@ -1,0 +1,112 @@
+from manim import *
+import numpy as np
+
+class cena(ThreeDScene):
+    def construct(self):
+
+        eixos = ThreeDAxes(
+            x_range=[-6, 6, 1],
+            y_range=[-6, 6, 1],
+            z_range=[-6, 6, 1],
+            x_length=8,
+            y_length=8,
+            z_length=8,
+        )
+        self.set_camera_orientation(phi=75 * DEGREES, theta= -60 * DEGREES)
+        
+        circulo = Circle()
+        
+        self.play(Create(eixos))
+        self.wait()
+        self.play(Create(circulo))
+
+        particula = Sphere(np.array([0,0,3]), radius=0.1)
+        self.play(Create(particula))
+
+        linha_1 = Line(start=np.array([1, 0., 0.]), end=np.array([0., 0., 3.]), color=BLUE_E)
+        self.play(Create(linha_1))
+        
+        linha_percurso = Line(start=np.array([0, 0., 3.]), end=np.array([0., 0., 0.]), color=WHITE)
+
+        arc = ArcBetweenPoints(np.array([2.7, 0, 0]), np.array([3 , 0.1 , 0]), color=RED)
+        arc.move_to(np.array([0.05, 0, 2.7]))
+        arc.rotate(PI/2)
+        self.play(Create(arc))
+
+        self.play(FadeOut(linha_1, arc))
+        self.play(MoveAlongPath(particula, linha_percurso), run_time = 3, rate_func= lambda x: x*x*x)
+        self.wait(2)
+
+class cena_escrita(Scene):
+    def construct(self):
+        text_eq_1 = MathTex(r"U_e = QV", font_size=60)
+        self.play(Write(text_eq_1))
+        self.wait(2)
+
+        text_eq_2 = MathTex(r"U_e = \frac{QkR}{\sqrt{D^2 + R^2}}\int_0^{2\pi}\lambda_0 d\theta", font_size=60)
+        self.play(Transform(text_eq_1, text_eq_2))
+        self.wait(2)
+
+        text_eq_2 = MathTex(r"U_e = \frac{QkR2\pi\lambda_0}{\sqrt{D^2 + R^2}}", font_size=60)
+        self.play(Transform(text_eq_1, text_eq_2))
+        caixa = SurroundingRectangle(text_eq_1)
+        self.wait(1)
+        self.play(Create(caixa))
+        self.wait(1)
+        self.play(FadeOut(text_eq_1, caixa))
+
+        text_eq_3 = MathTex(r"\Vec{dF_z} = \frac{-kQdq\cos(\alpha)}{r^2}\hat{z}")
+        self.play(Write(text_eq_3))
+        self.wait(2)
+
+        text_eq_4 = MathTex(r"\Vec{dF_z} = \frac{-kQ\cos(\alpha)\lambda_0Rd\theta}{R^2 + D^2}\hat{z}")
+        self.play(Transform(text_eq_3, text_eq_4))
+        self.wait(2)
+
+        text_eq_4 = MathTex(r"\Vec{dF_z} = \frac{-kQR\lambda_0Dd\theta}{(R^2 + D^2)^{3/2}}\hat{z}")
+        self.play(Transform(text_eq_3, text_eq_4))
+        self.wait(2)
+
+        text_eq_4 = MathTex(r"\Vec{F} = \frac{-kQR\lambda_0D}{(R^2 + D^2)^{3/2}}\hat{z} \int_{0}^{2\pi} d\theta")
+        self.play(Transform(text_eq_3, text_eq_4))
+        self.wait(2)
+
+        text_eq_4 = MathTex(r"\Vec{F} = \frac{-kQR\lambda_0D2\pi\hat{z}}{(R^2 + D^2)^{3/2}}")
+        self.play(Transform(text_eq_3, text_eq_4))
+        caixa = SurroundingRectangle(text_eq_3)
+        self.wait(1)
+        self.play(Create(caixa))
+        self.wait(1)
+        self.play(FadeOut(text_eq_3, caixa))
+
+        text_eq_5 = MathTex(r"W = \Delta E_c").shift(1.5*UP)
+        self.play(Write(text_eq_5))
+        self.wait(2)
+
+        text_eq_6 = MathTex(r"W_{D \xrightarrow{} 0} = \int \Vec{F_{el}}\cdot\Vec{dl}").shift(0.5*DOWN)
+        self.play(Write(text_eq_6))
+        self.wait(2)
+
+        text_eq_7 = MathTex(r"W_{D \xrightarrow{} 0} = \int_{D}^{0} F_{el}\,dz").shift(0.5*DOWN)
+        self.play(Transform(text_eq_6, text_eq_7))
+        self.wait(2)
+
+        text_eq_7 = MathTex(r"W_{D \xrightarrow{} 0} = \int_{0}^{D} \frac{-kQR\lambda_0z2\pi}{(R^2 + z^2)^{3/2}}\,dz").shift(0.5*DOWN)
+        self.play(Transform(text_eq_6, text_eq_7))
+        self.wait(2)
+
+        text_eq_7 = MathTex(r"W_{D \xrightarrow{} 0} = kQR\lambda_02\pi(\frac{1}{R} - \frac{1}{\sqrt{D^2+R^2}})").shift(0.5*DOWN)
+        self.play(Transform(text_eq_6, text_eq_7))
+        self.wait(2)
+
+        text_eq_8 = MathTex(r"W_{D \xrightarrow{} 0} = \frac{mv^2}{2}").shift(1.5*UP)    
+        self.play(Transform(text_eq_5, text_eq_8))
+        self.wait(2)
+
+        self.play(FadeOut(text_eq_5, text_eq_6))
+        text_eq_10 = MathTex(r"v = \sqrt{\frac{kQR\lambda_04\pi}{m}(\frac{1}{R} - \frac{1}{\sqrt{D^2+R^2}})}")
+        caixa = SurroundingRectangle(text_eq_10)
+        self.play(Write(text_eq_10))
+        self.play(Create(caixa))
+        self.wait(2)
+        self.play(FadeOut(text_eq_10, caixa))
